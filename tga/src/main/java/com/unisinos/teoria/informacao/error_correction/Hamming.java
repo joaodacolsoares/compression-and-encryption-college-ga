@@ -4,6 +4,8 @@ import java.io.*;
 import java.util.*;
 
 public class Hamming {
+    private static final String ERROR_MESSAGE = "Error detected in hamming code word %s at index %d";
+
     public static byte[] generate(byte[] asciiWord) throws IOException {
         int[] hammingCodeWord = new int[7];
         for (int i = 0; i < asciiWord.length; i++) {
@@ -28,6 +30,10 @@ public class Hamming {
         Set<Integer> validBitPositions = new HashSet<>();
         Set<Integer> incorrectParities = new HashSet<>();
 
+        StringBuilder asciiWordString = new StringBuilder();
+        for (byte bit : asciiWord) {
+            asciiWordString.append(bit);
+        }
 
         Map<Integer, List<Integer>> parityToPositionsMap = getParityToPositionsMap();
         byte[] hammingCodeWord = getHammingWordToCompare(asciiWord);
@@ -43,22 +49,25 @@ public class Hamming {
             return asciiWord;
         }
 
-        final Map<Integer, Integer> possibleInvalidBitsToOccurrences
-                = findPossibleInvalidBitPositions(validBitPositions, incorrectParities);
-
-        int incorrectBitPosition = getIncorrectBitPosition(possibleInvalidBitsToOccurrences);
+        int incorrectBitPosition = getIncorrectBitPosition(validBitPositions, incorrectParities);
         if (incorrectBitPosition != -1) {
+            System.out.println(String.format(ERROR_MESSAGE, asciiWordString, incorrectBitPosition));
             asciiWord[incorrectBitPosition] ^= 1;
         } else if (!incorrectParities.isEmpty()) {
             for (int incorrectParity : incorrectParities) {
+                System.out.println(String.format(ERROR_MESSAGE, asciiWordString, incorrectBitPosition));
                 asciiWord[incorrectParity] ^= 1;
             }
         }
         return asciiWord;
     }
 
-    private static Map<Integer, Integer> findPossibleInvalidBitPositions(Set<Integer> validBitPositions,
-                                                                         Set<Integer> incorrectParities) {
+    private static int getIncorrectBitPosition(Set<Integer> validBitPositions, Set<Integer> incorrectParities) {
+        final Map<Integer, Integer> possibleInvalidBitsToOccurrences = findPossibleInvalidBitPositions(validBitPositions, incorrectParities);
+        return getIncorrectBitPosition(possibleInvalidBitsToOccurrences);
+    }
+
+    private static Map<Integer, Integer> findPossibleInvalidBitPositions(Set<Integer> validBitPositions, Set<Integer> incorrectParities) {
         final Map<Integer, Integer> possibleInvalidBitsToOccurrences = new HashMap<>();
         for (int invalidParity : incorrectParities) {
             for (int bitPosition : getParityToPositionsMap().get(invalidParity)) {
