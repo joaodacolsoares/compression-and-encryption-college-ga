@@ -2,6 +2,10 @@ package com.unisinos.teoria.informacao.codifications;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import htsjdk.samtools.cram.io.BitOutputStream;
 import htsjdk.samtools.cram.io.DefaultBitOutputStream;
@@ -14,10 +18,11 @@ public class Fibonacci implements Codification {
 
     for (int i = 0; i < asciiLetters.length; i++) {
       int asciiLetter = asciiLetters[i];
-      int[] fibonacciNumbers = this.calculateFibonacciUntilNumber(asciiLetter, new int[] {1});
-      this.calculateCodeWord(asciiLetter, fibonacciNumbers, bit);
+      List<Integer> fibonacciNumbers = this.calculateFibonacciUntilNumber(asciiLetter, new ArrayList<Integer>(Arrays.asList(1, 2)));
+      List<Boolean> occurences = this.calculateOccurences(asciiLetter, fibonacciNumbers);
+      occurences.stream().forEach((isOccurence) -> bit.write(isOccurence));
     }
-  
+    
     bit.close();
     
     return bytes.toByteArray();
@@ -27,33 +32,42 @@ public class Fibonacci implements Codification {
     return new int[] {1};
   }
 
-  private int[] calculateFibonacciUntilNumber(int objective, int[] current) {
-    int index = current.length();
+  private List<Integer> calculateFibonacciUntilNumber(int objective, List<Integer> current) {
+    int index = current.size() - 1;
+    int nextFibonacciNumber = current.get(index) + current.get(index - 1);
 
-    if(current[index - 1] >= objective) {
-      current.pop()
-      return current
+    if (nextFibonacciNumber >= objective) {
+      return current;
     }
-
-    if(index == 1) {
-      current.push(2)
-    } else {
-      current.push(current[index - 1] + current[index - 2])
-    }
-
+  
+    current.add(nextFibonacciNumber);
     return this.calculateFibonacciUntilNumber(objective, current);
   }
 
-  private int[] calculateCodeWord(int objective, int[] fibonacciNumbers, BitOutputStream bit) {
-    int objectiveTotal = objective;
-
-    // só fazer isso aqui em java com o ArrayUtils.reverse(int[] array)
-
-    return fibonacciNumbers.slice().reverse().map(number => {
-      if(objectiveTotal >= number) {
-        bit.write(true)
+  private List<Boolean> calculateOccurences(int objective, List<Integer> fibonacciNumbers) {
+    Collections.reverse(fibonacciNumbers);
+    List<Boolean> fibonacciOccurences = new ArrayList<>();
+    int currentObjective = objective;
+    for (int i = 0; i < fibonacciNumbers.size(); i++) {
+      int fibonacciNumber = fibonacciNumbers.get(i);
+      boolean isOccurence = this.toOcurrence(fibonacciNumber, currentObjective);
+      fibonacciOccurences.add(isOccurence);
+      if (isOccurence) {
+        currentObjective = currentObjective - fibonacciNumber;
       }
-      bit.write(false)
-    }).reverse().join('')
+    }
+
+    Collections.reverse(fibonacciOccurences);
+
+    return fibonacciOccurences;
   }
+
+  private boolean toOcurrence(int fibonacciNumber, int objective) {
+    if (objective >= fibonacciNumber) {
+      objective = objective - fibonacciNumber;
+      return true;
+    }
+    return false;
+  }
+
 }
