@@ -15,7 +15,7 @@ public class Unary implements Codification {
     for (int i = 0; i < asciiLetters.length; i++) {
       int asciiLetter = asciiLetters[i];
 
-      for (int j = 0; j < asciiLetter.length(); j++) {
+      for (int j = 0; j < asciiLetter; j++) {
         bit.write(false);      
       }
       bit.write(true);
