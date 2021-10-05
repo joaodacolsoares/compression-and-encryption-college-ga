@@ -44,7 +44,7 @@ public class Golomb implements Codification {
         bit.write(false);
       }  
 
-      for (int j = 0; j < remainderInBinary.length() - 1; j++) {
+      for (int j = 0; j < remainderInBinary.length(); j++) {
         bit.write(remainderInBinary.charAt(j) == '1');
       }
       
@@ -69,7 +69,6 @@ public class Golomb implements Codification {
         if (!currentBit) {
           countZero++;
         }
-
         if (STOP_BIT == currentBit) {
           int remainder = bits.readBits((int) (Math.log10(k) / Math.log10(2)));
           asciiLetters.add((countZero * k) + remainder);

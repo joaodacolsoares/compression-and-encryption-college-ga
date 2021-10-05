@@ -37,4 +37,12 @@ public class GolombTest {
     int[] result = golomb.decompress(golomb.compress(new int[] {14}));
     assertEquals(14, result[0]);
   }
+
+  @Test
+  public void shouldDecompressRemainderWith2Letters() throws IOException {
+    Codification golomb = new Golomb(4);
+    int[] result = golomb.decompress(golomb.compress(new int[] {14, 18}));
+    assertEquals(14, result[0]);
+    assertEquals(18, result[1]);
+  }
 }
