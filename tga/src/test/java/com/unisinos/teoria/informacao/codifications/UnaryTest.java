@@ -15,4 +15,11 @@ public class UnaryTest {
     assertEquals(1, result[0]);
   }
 
+  @Test
+  public void shouldDecompress() throws IOException {
+    Codification unary = new Unary();
+    int[] result = unary.decompress(unary.compress(new int[] {1100}));
+    assertEquals(1100, result[0]);
+  }
+
 }
