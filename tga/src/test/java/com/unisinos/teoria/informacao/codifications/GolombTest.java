@@ -24,4 +24,17 @@ public class GolombTest {
     assertEquals(112, result[0]);
   }
 
+  @Test
+  public void shouldDecompressRemainderWith3Positions() throws IOException {
+    Codification golomb = new Golomb(8);
+    int[] result = golomb.decompress(golomb.compress(new int[] {14}));
+    assertEquals(14, result[0]);
+  }
+
+  @Test
+  public void shouldDecompressRemainderWith2Positions() throws IOException {
+    Codification golomb = new Golomb(4);
+    int[] result = golomb.decompress(golomb.compress(new int[] {14}));
+    assertEquals(14, result[0]);
+  }
 }
