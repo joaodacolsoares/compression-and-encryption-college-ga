@@ -35,7 +35,7 @@ public class Unary implements Codification {
     ByteArrayInputStream byteArray = new ByteArrayInputStream(bytes);
     BitInputStream bits = new DefaultBitInputStream(byteArray);
 
-    List<Boolean> allBits = readAllBits(bits, bytes.length * 8);
+    List<Boolean> allBits = readAllBits(bits, bytes.length);
     List<Integer> asciiLetters = new ArrayList<>();
     Integer counter = 0;
     for (int i = 0; i < allBits.size(); i++) {
@@ -51,9 +51,10 @@ public class Unary implements Codification {
     return asciiLetters.stream().mapToInt(Integer::intValue).toArray();
   }
 
-  private List<Boolean> readAllBits(BitInputStream bits, int length) {
+  private List<Boolean> readAllBits(BitInputStream bits, int numberOfBytes) {
+    int numberOfBits = numberOfBytes * 8;
     List<Boolean> allBits = new ArrayList<>();
-    for (int i = 0; i < length; i++) {
+    for (int i = 0; i < numberOfBits; i++) {
       allBits.add(bits.readBit());
     }
     return allBits;

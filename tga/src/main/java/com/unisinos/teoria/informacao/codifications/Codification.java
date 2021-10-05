@@ -6,6 +6,6 @@ public interface Codification {
  
   public byte[] compress(int[] asciiLetters) throws IOException;
   
-  public int[] decompress(byte[] bytes);
+  public int[] decompress(byte[] bytes) throws IOException;
   
 }
