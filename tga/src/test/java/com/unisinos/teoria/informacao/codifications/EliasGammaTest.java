@@ -15,5 +15,15 @@ public class EliasGammaTest {
 
     assertEquals(56, result[0]);
   }
+
+  @Test
+  public void shouldDecompress() throws IOException {
+    Codification eliasGamma = new EliasGamma();
+    int[] result = eliasGamma.decompress(eliasGamma.compress(new int[] {67, 51, 98}));
+
+    assertEquals(67, result[0]);
+    assertEquals(51, result[1]);
+    assertEquals(98, result[2]);
+  }
   
 }
