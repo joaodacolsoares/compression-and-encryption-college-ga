@@ -35,7 +35,7 @@ public class App {
         
         
         if ("ENCODE".equals(encodeOrDecode)) {
-            Codification codification = codificationFactory.create(args[3]);
+            Codification codification = codificationFactory.create(args[3], args.length >= 5 ? args[4] : "");
             byte[] result = codification.compress(new String(file).chars().toArray());
             FileUtils.writeByteArrayToFile(new File(destinationFile), result);
         } else {
