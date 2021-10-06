@@ -6,7 +6,7 @@ import java.util.*;
 public class Hamming {
     private static final String ERROR_MESSAGE = "Error detected in hamming code word %s at index %d";
 
-    public static byte[] generate(byte[] asciiWord) throws IOException {
+    public static byte[] encode(byte[] asciiWord) throws IOException {
         int[] hammingCodeWord = new int[7];
         for (int i = 0; i < asciiWord.length; i++) {
             hammingCodeWord[i] = asciiWord[i];
@@ -26,7 +26,7 @@ public class Hamming {
         return bytes.toByteArray();
     }
 
-    public static byte[] detectErrors(byte[] asciiWord) throws IOException {
+    public static byte[] decode(byte[] asciiWord) throws IOException {
         Set<Integer> validBitPositions = new HashSet<>();
         Set<Integer> incorrectParities = new HashSet<>();
 
@@ -55,11 +55,11 @@ public class Hamming {
             asciiWord[incorrectBitPosition] ^= 1;
         } else if (!incorrectParities.isEmpty()) {
             for (int incorrectParity : incorrectParities) {
-                System.out.println(String.format(ERROR_MESSAGE, asciiWordString, incorrectBitPosition));
+                System.out.println(String.format(ERROR_MESSAGE, asciiWordString, incorrectParity));
                 asciiWord[incorrectParity] ^= 1;
             }
         }
-        return asciiWord;
+        return Arrays.copyOfRange(asciiWord, 0, 4);
     }
 
     private static int getIncorrectBitPosition(Set<Integer> validBitPositions, Set<Integer> incorrectParities) {
@@ -96,7 +96,7 @@ public class Hamming {
         for (int i = 0; i < 4; i++) {
             hammingCodeWord[i] = asciiWord[i];
         }
-        hammingCodeWord = generate(hammingCodeWord);
+        hammingCodeWord = encode(hammingCodeWord);
         return hammingCodeWord;
     }
 
