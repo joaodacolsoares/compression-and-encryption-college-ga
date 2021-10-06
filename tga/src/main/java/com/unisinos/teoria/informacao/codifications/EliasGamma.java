@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.unisinos.teoria.informacao.enums.CodificationHeader;
+
 import htsjdk.samtools.cram.io.BitInputStream;
 import htsjdk.samtools.cram.io.BitOutputStream;
 import htsjdk.samtools.cram.io.DefaultBitInputStream;
@@ -19,6 +21,8 @@ public class EliasGamma implements Codification {
   public byte[] compress(int[] asciiLetters) throws IOException {
     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
     BitOutputStream bit = new DefaultBitOutputStream(bytes);
+
+    Codification.writeHeader(bit, CodificationHeader.ELIAS_GAMMA);
 
     for (int i = 0; i < asciiLetters.length; i++) {
       int asciiLetter = asciiLetters[i];
@@ -51,6 +55,10 @@ public class EliasGamma implements Codification {
     BitInputStream bits = new DefaultBitInputStream(byteArray);
   
     List<Integer> asciiLetters = new ArrayList<>();
+
+    bits.readBits(BYTE_SIZE);
+
+    //CRC
 
     int countZero = 0;
     while (true) {

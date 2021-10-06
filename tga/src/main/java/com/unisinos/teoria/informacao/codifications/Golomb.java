@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.unisinos.teoria.informacao.enums.CodificationHeader;
+
 import htsjdk.samtools.cram.io.BitInputStream;
 import htsjdk.samtools.cram.io.BitOutputStream;
 import htsjdk.samtools.cram.io.DefaultBitInputStream;
@@ -24,7 +26,9 @@ public class Golomb implements Codification {
 
   public byte[] compress(int[] asciiLetters) throws IOException {
     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-    BitOutputStream bit = new DefaultBitOutputStream(bytes);
+    BitOutputStream bits = new DefaultBitOutputStream(bytes);
+
+    writeHeader(bits);
   
     for (int i = 0; i < asciiLetters.length; i++) {
       int asciiLetter = asciiLetters[i];
@@ -32,25 +36,25 @@ public class Golomb implements Codification {
       double quotient = Math.floor(asciiLetter / k);
   
       for (int j = 0; j < quotient; j++) {
-        bit.write(false);      
+        bits.write(false);      
       }
 
-      bit.write(true);
+      bits.write(true);
 
       int length = (int) (Math.log10(k) / Math.log10(2));
       String remainderInBinary = Integer.toBinaryString(remainder);
       
       for (int j = 0; j < length - remainderInBinary.length(); j++) {
-        bit.write(false);
+        bits.write(false);
       }  
 
       for (int j = 0; j < remainderInBinary.length(); j++) {
-        bit.write(remainderInBinary.charAt(j) == '1');
+        bits.write(remainderInBinary.charAt(j) == '1');
       }
       
     }
 
-    bit.close();
+    bits.close();
     
     return bytes.toByteArray();
   }
@@ -62,6 +66,9 @@ public class Golomb implements Codification {
     int countZero = 0;
 
     List<Integer> asciiLetters = new ArrayList<>();
+
+    int k = bits.readBits(BYTE_SIZE);
+    //CRC
     
     while (true) {
       try {
@@ -77,7 +84,23 @@ public class Golomb implements Codification {
       } catch (RuntimeEOFException e) {break;}
     }
     return asciiLetters.stream().mapToInt(Integer::intValue).toArray();
+  }
 
+  private void writeHeader(BitOutputStream bits) {
+    String header = CodificationHeader.GOLOMB.getValue();
+    for (int i = 0; i < header.length(); i++) {
+      bits.write(header.charAt(i) == '1');
+    }
+
+    String binaryK = Integer.toBinaryString(k);
+
+    for (int j = 0; j < BYTE_SIZE - binaryK.length(); j++) {
+      bits.write(false);
+    }  
+
+    for (int i = 0; i < BYTE_SIZE; i++) {
+      bits.write(binaryK.charAt(i) == '1');
+    }
   }
    
 }

@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.unisinos.teoria.informacao.enums.CodificationHeader;
+
 import htsjdk.samtools.cram.io.BitInputStream;
 import htsjdk.samtools.cram.io.BitOutputStream;
 import htsjdk.samtools.cram.io.DefaultBitInputStream;
@@ -16,6 +18,8 @@ public class Unary implements Codification {
   public byte[] compress(int[] asciiLetters) throws IOException {
     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
     BitOutputStream bit = new DefaultBitOutputStream(bytes);
+
+    Codification.writeHeader(bit, CodificationHeader.UNARY);
   
     for (int i = 0; i < asciiLetters.length; i++) {
       int asciiLetter = asciiLetters[i];
@@ -34,6 +38,9 @@ public class Unary implements Codification {
   public int[] decompress(byte[] bytes) {
     ByteArrayInputStream byteArray = new ByteArrayInputStream(bytes);
     BitInputStream bits = new DefaultBitInputStream(byteArray);
+
+    bits.readBits(BYTE_SIZE);
+    //CRC
 
     List<Boolean> allBits = readAllBits(bits, bytes.length);
     List<Integer> asciiLetters = new ArrayList<>();
