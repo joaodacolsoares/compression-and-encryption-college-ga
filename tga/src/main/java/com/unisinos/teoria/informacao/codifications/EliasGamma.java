@@ -14,11 +14,11 @@ import htsjdk.samtools.cram.io.DefaultBitInputStream;
 import htsjdk.samtools.cram.io.DefaultBitOutputStream;
 import htsjdk.samtools.util.RuntimeEOFException;
 
-public class EliasGamma implements Codification {
+public class EliasGamma extends AbstractCodification implements Codification {
 
   private static final boolean STOP_BIT = Boolean.TRUE;
 
-  public byte[] compress(int[] asciiLetters) throws IOException {
+  public byte[] compressData(int[] asciiLetters) throws IOException {
     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
     BitOutputStream bit = new DefaultBitOutputStream(bytes);
 
@@ -50,7 +50,7 @@ public class EliasGamma implements Codification {
     return bytes.toByteArray();
   }
   
-  public int[] decompress(byte[] bytes) throws IOException {
+  public int[] decompressData(byte[] bytes) throws IOException {
     ByteArrayInputStream byteArray = new ByteArrayInputStream(bytes);
     BitInputStream bits = new DefaultBitInputStream(byteArray);
   
