@@ -14,7 +14,7 @@ import htsjdk.samtools.cram.io.DefaultBitInputStream;
 import htsjdk.samtools.cram.io.DefaultBitOutputStream;
 import htsjdk.samtools.util.RuntimeEOFException;
 
-public class Golomb implements Codification {
+public class Golomb extends AbstractCodification implements Codification {
 
   private static final boolean STOP_BIT = Boolean.TRUE;
 
@@ -24,7 +24,7 @@ public class Golomb implements Codification {
     this.k = k;
   }
 
-  public byte[] compress(int[] asciiLetters) throws IOException {
+  public byte[] compressData(int[] asciiLetters) throws IOException {
     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
     BitOutputStream bits = new DefaultBitOutputStream(bytes);
 
@@ -59,7 +59,7 @@ public class Golomb implements Codification {
     return bytes.toByteArray();
   }
 
-  public int[] decompress(byte[] bytes) {
+  public int[] decompressData(byte[] bytes) {
     ByteArrayInputStream byteArray = new ByteArrayInputStream(bytes);
     BitInputStream bits = new DefaultBitInputStream(byteArray);
     
