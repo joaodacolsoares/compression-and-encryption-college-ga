@@ -16,7 +16,7 @@ public abstract class AbstractCodification implements Codification {
     @Override
     public byte[] compress(int[] asciiLetters) throws IOException {
         byte[] compressedData = compressData(asciiLetters);
-        byte[] header = new byte[8];
+        byte[] header = new byte[16];
 
         ByteArrayInputStream byteArray = new ByteArrayInputStream(compressedData);
         BitInputStream bits = new DefaultBitInputStream(byteArray);
@@ -25,8 +25,9 @@ public abstract class AbstractCodification implements Codification {
         BitOutputStream outputBits = new DefaultBitOutputStream(outputBytes);
 
         for (int i = 0; i < header.length; i++) {
-            header[i] = bits.readBit() ? (byte) 1 : 0;
-            outputBits.write(bits.readBit());
+            boolean bitValue = bits.readBit();
+            header[i] = bitValue ? (byte) 1 : 0;
+            outputBits.write(bitValue);
         }
 
         byte[] crcCode = CRC.encode(header);
@@ -57,7 +58,7 @@ public abstract class AbstractCodification implements Codification {
 
     @Override
     public int[] decompress(byte[] bytes) throws IOException {
-        byte[] header = new byte[8];
+        byte[] header = new byte[16];
         byte[] crcCode = new byte[8];
 
         ByteArrayInputStream byteArray = new ByteArrayInputStream(bytes);
@@ -67,7 +68,9 @@ public abstract class AbstractCodification implements Codification {
         BitOutputStream outputBits = new DefaultBitOutputStream(outputBytes);
 
         for (int i = 0; i < header.length; i++) {
-            header[i] = bits.readBit() ? (byte) 1 : 0;
+            boolean bitValue = bits.readBit();
+            header[i] = bitValue ? (byte) 1 : 0;
+            outputBits.write(bitValue);
         }
 
         for (int i = 0; i < crcCode.length; i++) {
