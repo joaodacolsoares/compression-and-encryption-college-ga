@@ -12,6 +12,7 @@ import htsjdk.samtools.cram.io.BitInputStream;
 import htsjdk.samtools.cram.io.BitOutputStream;
 import htsjdk.samtools.cram.io.DefaultBitInputStream;
 import htsjdk.samtools.cram.io.DefaultBitOutputStream;
+import htsjdk.samtools.util.RuntimeEOFException;
 
 public class Unary extends AbstractCodification implements Codification {
 
@@ -39,7 +40,7 @@ public class Unary extends AbstractCodification implements Codification {
     ByteArrayInputStream byteArray = new ByteArrayInputStream(bytes);
     BitInputStream bits = new DefaultBitInputStream(byteArray);
 
-    bits.readBits(BYTE_SIZE);
+    bits.readBits(BYTE_SIZE * 2);
     //CRC
 
     List<Boolean> allBits = readAllBits(bits, bytes.length);
@@ -59,11 +60,13 @@ public class Unary extends AbstractCodification implements Codification {
   }
 
   private List<Boolean> readAllBits(BitInputStream bits, int numberOfBytes) {
-    int numberOfBits = numberOfBytes * 8;
     List<Boolean> allBits = new ArrayList<>();
-    for (int i = 0; i < numberOfBits; i++) {
-      allBits.add(bits.readBit());
+    while (true) {
+      try {
+        allBits.add(bits.readBit());
+      } catch(RuntimeEOFException e) {break;}
     }
+
     return allBits;
   }
 
