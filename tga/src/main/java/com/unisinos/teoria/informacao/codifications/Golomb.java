@@ -88,6 +88,11 @@ public class Golomb implements Codification {
 
   private void writeHeader(BitOutputStream bits) {
     String header = CodificationHeader.GOLOMB.getValue();
+
+    for (int i = 0; i < BYTE_SIZE - header.length(); i++) {
+      bits.write(false);
+    }
+
     for (int i = 0; i < header.length(); i++) {
       bits.write(header.charAt(i) == '1');
     }
@@ -98,7 +103,7 @@ public class Golomb implements Codification {
       bits.write(false);
     }  
 
-    for (int i = 0; i < BYTE_SIZE; i++) {
+    for (int i = 0; i < binaryK.length(); i++) {
       bits.write(binaryK.charAt(i) == '1');
     }
   }
