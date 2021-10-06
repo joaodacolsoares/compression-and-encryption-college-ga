@@ -1,32 +1,37 @@
-# Trabalho Teoria da Informação - Criptografia e Compressão
+# Teoria da Informação - Encode e Decode
 
-class App
+## Descrição
+Esse projeto é um trabalho da faculdade em que consiste na criação de um Encoder/Decoder que suporte os seguintes tipos de codificações: Unário, Elias Gamma, Fibonacci, Delta e Golomb. 
 
-CodificationFactory
+## Tecnologias
+Nós começamos a desenvolver o projeto em TypeScript(nodejs), mas depois de uma breve validação resolvemos optar por utilizar **Java** pois era mais fácil o acesso ao nível de bits. 
 
-FibonacciCodification
+## Instalação
+Requisitos para iniciar: 
+ - Java 8 
+ - Maven
 
-interface Codification
- - compress
- - decompress
+### Clonando o repositório
+Para clonar o repositório deve rodar o seguinte comando:
+`git clone https://github.com/joaodacolsoares/compression-and-encryption-college-ga.git`
 
-input -> ascii -> codeWord -> buffer
+### Como rodar
+Para rodar a aplicação, tem que utilizar esse comando na home do projeto onde se deve substituir os valores de 
+ `<input_file>`, `<action>`, `<codification>` e `<golomb_k>` com os valores respectivos no path:
+`mvn exec:java -Dexec.mainClass=com.unisinos.teoria.informacao.App -Dexec.args="<input_file> <output_file> <action> <codification> <golomb_k>"`
 
-### How to run
-In order to run you need to execute the following command.
-```
-mvn exec:java -Dexec.mainClass=com.unisinos.teoria.informacao.App -Dexec.args="<input_file> <output_file> <action> <codification> <golomb_k>"
-```
-You need to replace the values for the <input_file> and <output_file> with the path for your files.
-The values for the action can be:
- - "ENCODE"
- - "DECODE"
+Valor para `<input_file>`:
+ - O path do seu arquivo em relação a pasta principal do projeto
 
-The values for codification:
- - "ELIAS_GAMMA"
- - "GOLOMB"
- - "FIBONACCI"
- - "UNARY"
- - "DELTA"
+Valores para `<action>`:
+-   "ENCODE"
+-   "DECODE"
 
-The <golomb_k> can be replaced with any value you want to use in the golomb compression.
+Valores para `<codification>`:
+-   "ELIAS_GAMMA"
+-   "GOLOMB"
+-   "FIBONACCI"
+-   "UNARY"
+-   "DELTA"
+
+O valor de `<golomb_k>` pode ser trocado por um inteiro que serve como o k.
