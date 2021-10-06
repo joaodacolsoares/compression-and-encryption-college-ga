@@ -11,6 +11,7 @@ import htsjdk.samtools.util.RuntimeEOFException;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 
 public abstract class AbstractCodification implements Codification {
     @Override
@@ -28,32 +29,41 @@ public abstract class AbstractCodification implements Codification {
             boolean bitValue = bits.readBit();
             header[i] = bitValue ? (byte) 1 : 0;
             outputBits.write(bitValue);
+            System.out.print(header[i]);
         }
-
+        
+        
         byte[] crcCode = CRC.encode(header);
-        for (byte crcByte : crcCode) {
-            outputBits.write(crcByte == 1);
+        ByteArrayInputStream crcBytes = new ByteArrayInputStream(crcCode);
+        BitInputStream crcBits = new DefaultBitInputStream(crcBytes);
+        System.out.println();
+        for (int i = 0; i < BYTE_SIZE; i++) {
+            boolean bit = crcBits.readBit();
+            System.out.print(bit ? "1" : "0");
+            outputBits.write(bit);
         }
 
-        byte[] hammingData = new byte[4];
-        for (int i = 0; ; i++) {
-            try {
-                if ((i + 1) % 4 == 0) {
-                    hammingData[i % 4] = bits.readBit() ? (byte) 1 : 0;
-                    byte[] hammingCodeWord = Hamming.encode(hammingData);
+        // byte[] hammingData = new byte[4];
+        // for (int i = 0; ; i++) {
+        //     try {
+        //         if ((i + 1) % 4 == 0) {
+        //             hammingData[i % 4] = bits.readBit() ? (byte) 1 : 0;
+        //             byte[] hammingCodeWord = Hamming.encode(hammingData);
 
-                    for (byte hammingByte : hammingCodeWord) {
-                        outputBits.write(hammingByte == 1);
-                    }
-                } else {
-                    hammingData[i % 4] = bits.readBit() ? (byte) 1 : 0;
-                }
-            } catch (RuntimeEOFException exception) {
-                break;
-            }
-        }
+        //             for (byte hammingByte : hammingCodeWord) {
+        //                 outputBits.write(hammingByte == 1);
+        //             }
+        //         } else {
+        //             hammingData[i % 4] = bits.readBit() ? (byte) 1 : 0;
+        //         }
+        //     } catch (RuntimeEOFException exception) {
+        //         break;
+        //     }
+        // }
+        crcBits.close();
+        bits.close();
         outputBits.close();
-        return outputBytes.toByteArray();
+        return compressedData;
     }
 
     @Override
@@ -70,32 +80,36 @@ public abstract class AbstractCodification implements Codification {
         for (int i = 0; i < header.length; i++) {
             boolean bitValue = bits.readBit();
             header[i] = bitValue ? (byte) 1 : 0;
+            System.out.print(header[i]);
             outputBits.write(bitValue);
         }
+        System.out.println();
 
-        for (int i = 0; i < crcCode.length; i++) {
+        for (int i = 0; i < BYTE_SIZE; i++) {
             crcCode[i] = bits.readBit() ? (byte) 1 : 0;
+            System.out.print(crcCode[i] == 1 ? "1" : "0");
         }
 
         CRC.validateCRC(crcCode, header);
 
-        byte[] hammingCodeWord = new byte[7];
-        for (int i = 0; ; i++) {
-            try {
-                if ((i + 1) % 7 == 0) {
-                    hammingCodeWord[i % 7] = bits.readBit() ? (byte) 1 : 0;
-                    byte[] decodedData = Hamming.decode(hammingCodeWord);
+        // byte[] hammingCodeWord = new byte[7];
+        // for (int i = 0; ; i++) {
+        //     try {
+        //         if ((i + 1) % 7 == 0) {
+        //             hammingCodeWord[i % 7] = bits.readBit() ? (byte) 1 : 0;
+        //             byte[] decodedData = Hamming.decode(hammingCodeWord);
 
-                    for (byte bit : decodedData) {
-                        outputBits.write(bit == 1);
-                    }
-                } else {
-                    hammingCodeWord[i % 7] = bits.readBit() ? (byte) 1 : 0;
-                }
-            } catch (RuntimeEOFException exception) {
-                break;
-            }
-        }
+        //             for (byte bit : decodedData) {
+        //                 outputBits.write(bit == 1);
+        //             }
+        //         } else {
+        //             hammingCodeWord[i % 7] = bits.readBit() ? (byte) 1 : 0;
+        //         }
+        //     } catch (RuntimeEOFException exception) {
+        //         break;
+        //     }
+        // }
+        bits.close();
         outputBits.close();
         return decompressData(outputBytes.toByteArray());
     }
