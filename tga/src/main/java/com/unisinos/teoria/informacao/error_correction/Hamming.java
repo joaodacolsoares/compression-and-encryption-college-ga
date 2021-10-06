@@ -46,7 +46,7 @@ public class Hamming {
         }
 
         if (incorrectParities.isEmpty()) {
-            return asciiWord;
+            return Arrays.copyOfRange(asciiWord, 0, 4);
         }
 
         int incorrectBitPosition = getIncorrectBitPosition(validBitPositions, incorrectParities);

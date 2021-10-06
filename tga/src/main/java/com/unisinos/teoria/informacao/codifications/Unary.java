@@ -13,9 +13,9 @@ import htsjdk.samtools.cram.io.BitOutputStream;
 import htsjdk.samtools.cram.io.DefaultBitInputStream;
 import htsjdk.samtools.cram.io.DefaultBitOutputStream;
 
-public class Unary implements Codification {
+public class Unary extends AbstractCodification implements Codification {
 
-  public byte[] compress(int[] asciiLetters) throws IOException {
+  public byte[] compressData(int[] asciiLetters) throws IOException {
     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
     BitOutputStream bit = new DefaultBitOutputStream(bytes);
 
@@ -35,7 +35,7 @@ public class Unary implements Codification {
     return bytes.toByteArray();
   }
 
-  public int[] decompress(byte[] bytes) {
+  public int[] decompressData(byte[] bytes) {
     ByteArrayInputStream byteArray = new ByteArrayInputStream(bytes);
     BitInputStream bits = new DefaultBitInputStream(byteArray);
 
