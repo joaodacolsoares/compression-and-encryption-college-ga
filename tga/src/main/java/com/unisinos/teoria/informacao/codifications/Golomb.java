@@ -67,7 +67,7 @@ public class Golomb extends AbstractCodification implements Codification {
 
     List<Integer> asciiLetters = new ArrayList<>();
 
-    int k = bits.readBits(BYTE_SIZE);
+    int k = bits.readBits(BYTE_SIZE * 2);
     //CRC
     
     while (true) {

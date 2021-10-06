@@ -43,7 +43,7 @@ public class Fibonacci extends AbstractCodification implements Codification {
     ByteArrayInputStream byteArray = new ByteArrayInputStream(bytes);
     BitInputStream bits = new DefaultBitInputStream(byteArray);
   
-    bits.readBits(BYTE_SIZE);
+    bits.readBits(BYTE_SIZE * 2);
     //CRC
 
     List<Integer> asciiLetters = new ArrayList<>();
