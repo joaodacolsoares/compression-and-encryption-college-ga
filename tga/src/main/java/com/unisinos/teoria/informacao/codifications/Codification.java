@@ -16,6 +16,10 @@ public interface Codification {
 
   static void writeHeader(BitOutputStream bits, CodificationHeader headerType) {
     String header = headerType.getValue();
+    header = Integer.toBinaryString(Integer.parseInt(header));
+    for (int i = 0; i < BYTE_SIZE - header.length(); i++) {
+      bits.write(false);
+    }
     for (int i = 0; i < header.length(); i++) {
       bits.write(header.charAt(i) == '1');
     }
