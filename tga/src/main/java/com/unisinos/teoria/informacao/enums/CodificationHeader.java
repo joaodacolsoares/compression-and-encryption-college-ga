@@ -1,5 +1,7 @@
 package com.unisinos.teoria.informacao.enums;
 
+import java.util.Arrays;
+
 public enum CodificationHeader {
 
   GOLOMB("1"),
@@ -18,7 +20,7 @@ public enum CodificationHeader {
   }
 
   public static CodificationHeader fromValue(int bits) {
-    return valueOf(String.valueOf(bits));
+    return Arrays.asList(values()).stream().filter((header) ->  header.getValue().equals(String.valueOf(bits))).findFirst().get();
   }
 
 }
