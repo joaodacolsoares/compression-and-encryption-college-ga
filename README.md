@@ -16,8 +16,8 @@ Para clonar o repositório deve rodar o seguinte comando:
 `git clone https://github.com/joaodacolsoares/compression-and-encryption-college-ga.git`
 
 ### Como rodar
-Primeiramente tem que fazer o build do projeto com:
-`mvn clean install`
+Primeiramente tem que fazer o build do projeto com: `mvn clean install`.
+
 Para rodar a aplicação, tem que utilizar esse comando na home do projeto onde se deve substituir os valores de 
  `<input_file>`, `<action>`, `<codification>` e `<golomb_k>` com os valores respectivos no path:
 `mvn exec:java -Dexec.mainClass=com.unisinos.teoria.informacao.App -Dexec.args="<input_file> <output_file> <action> <codification> <golomb_k>"`
