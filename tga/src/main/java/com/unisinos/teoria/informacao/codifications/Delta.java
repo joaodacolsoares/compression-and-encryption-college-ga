@@ -50,7 +50,7 @@ public class Delta extends AbstractCodification implements Codification {
     }
 
     public int[] decompressData(byte[] bytes) throws IOException {
-        // TODO Auto-generated method stub
+        // como detectar o stop bit?
         return null;
     }
 
