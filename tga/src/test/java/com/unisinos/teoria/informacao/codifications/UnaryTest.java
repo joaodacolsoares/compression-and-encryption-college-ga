@@ -12,7 +12,7 @@ public class UnaryTest {
   public void shouldCompressWith7ZerosAnd1StopBit() throws IOException {
     Codification unary = new Unary();
     byte[] result = unary.compress(new int[] {7});
-    assertEquals(1, result[0]);
+    assertEquals(8, result[0]);
   }
 
   @Test
