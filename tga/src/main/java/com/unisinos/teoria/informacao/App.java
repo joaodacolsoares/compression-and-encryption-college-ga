@@ -25,8 +25,7 @@ public class App {
 
     public static void main(String[] args) throws Exception {
         String originFile = args[0];
-        String destinationFile = args[1];
-        String encodeOrDecode = args[2];
+        String encodeOrDecode = args[1];
         CodificationFactory codificationFactory = new CodificationFactory();
         byte[] file = Files.readAllBytes(Paths.get(originFile));
         
@@ -35,18 +34,18 @@ public class App {
         
         
         if ("ENCODE".equals(encodeOrDecode)) {
-            Codification codification = codificationFactory.create(args[3], args.length >= 5 ? args[4] : "");
+            Codification codification = codificationFactory.create(args[2], args.length >= 4 ? args[3] : "");
             byte[] result = codification.compress(new String(file).chars().toArray());
-            FileUtils.writeByteArrayToFile(new File(destinationFile), result);
+            FileUtils.writeByteArrayToFile(new File(originFile + ".ecc"), result);
         } else {
             CodificationHeader codificationHeader = CodificationHeader.fromValue(bits.readBits(Codification.BYTE_SIZE));
-            Codification codification = codificationFactory.create(codificationHeader.toString());
+            Codification codification = codificationFactory.create(codificationHeader.toString(), Integer.toString(bits.readBits(Codification.BYTE_SIZE)));
             int[] result = codification.decompress(file);
             String buffer = new String();
             for (int i = 0; i < result.length; i++) {
                 buffer += (char) result[i];
             }
-            FileUtils.write(new File(destinationFile), buffer, StandardCharsets.UTF_8);
+            FileUtils.write(new File("./output"), buffer, StandardCharsets.UTF_8);
         }
         
     }
