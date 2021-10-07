@@ -20,7 +20,7 @@ Primeiramente tem que fazer o build do projeto com: `mvn clean install`.
 
 Para rodar a aplicação, tem que utilizar esse comando na home do projeto onde se deve substituir os valores de 
  `<input_file>`, `<action>`, `<codification>` e `<golomb_k>` com os valores respectivos no path:
-`mvn exec:java -Dexec.mainClass=com.unisinos.teoria.informacao.App -Dexec.args="<input_file> <output_file> <action> <codification> <golomb_k>"`
+`mvn exec:java -Dexec.mainClass=com.unisinos.teoria.informacao.App -Dexec.args="<input_file> <action> <codification> <golomb_k>"`
 
 Valor para `<input_file>`:
  - O path do seu arquivo em relação a pasta principal do projeto
@@ -36,4 +36,4 @@ Valores para `<codification>`:
 -   "UNARY"
 -   "DELTA"
 
-O valor de `<golomb_k>` pode ser trocado por um inteiro que serve como o k.
+O valor de `<golomb_k>` pode ser trocado por um inteiro que serve como o k e é opcional.
