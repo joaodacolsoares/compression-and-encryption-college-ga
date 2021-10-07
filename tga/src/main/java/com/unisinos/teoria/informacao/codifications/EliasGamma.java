@@ -56,7 +56,7 @@ public class EliasGamma extends AbstractCodification implements Codification {
   
     List<Integer> asciiLetters = new ArrayList<>();
 
-    bits.readBits(BYTE_SIZE);
+    bits.readBits(BYTE_SIZE * 2);
 
     //CRC
 

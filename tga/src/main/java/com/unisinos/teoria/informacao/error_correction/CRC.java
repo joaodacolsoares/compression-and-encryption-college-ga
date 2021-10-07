@@ -1,8 +1,12 @@
 package com.unisinos.teoria.informacao.error_correction;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+
+import htsjdk.samtools.cram.io.BitInputStream;
+import htsjdk.samtools.cram.io.DefaultBitInputStream;
 
 public class CRC {
     private static final String CORRUPTED_CRC_CODE_MESSAGE = "Received crc code is corrupted";
@@ -40,16 +44,15 @@ public class CRC {
     }
 
     public static void validateCRC(byte[] crcCode, byte[] data) throws IllegalArgumentException, IOException {
-        byte[] generatedCRCCode = encode(data);
-
-        if (crcCode.length != generatedCRCCode.length) {
-            throw new IllegalArgumentException(CORRUPTED_CRC_CODE_MESSAGE);
-        }
+        ByteArrayInputStream outputBytes = new ByteArrayInputStream(encode(data));
+        BitInputStream outputBits = new DefaultBitInputStream(outputBytes);
 
         for (int i = 0; i < crcCode.length; i++) {
-            if (generatedCRCCode[i] != crcCode[i]) {
+            boolean bit = outputBits.readBit();
+            if ((bit ? 1 : 0) != crcCode[i]) {
                 throw new IllegalArgumentException(CORRUPTED_CRC_CODE_MESSAGE);
             }
         }
+        outputBits.close();
     }
 }

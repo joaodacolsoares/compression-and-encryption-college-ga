@@ -31,8 +31,14 @@ public abstract class AbstractCodification implements Codification {
         }
 
         byte[] crcCode = CRC.encode(header);
-        for (byte crcByte : crcCode) {
-            outputBits.write(crcByte == 1);
+
+        ByteArrayInputStream crcBytes = new ByteArrayInputStream(crcCode);
+        BitInputStream crcBits = new DefaultBitInputStream(crcBytes);
+
+        for (int i = 0; i < BYTE_SIZE; i++) {
+            boolean bit = crcBits.readBit();
+            System.out.print(bit ? "1" : "0");
+            outputBits.write(bit);
         }
 
         byte[] hammingData = new byte[4];
@@ -52,6 +58,8 @@ public abstract class AbstractCodification implements Codification {
                 break;
             }
         }
+        crcBits.close();
+        bits.close();
         outputBits.close();
         return outputBytes.toByteArray();
     }

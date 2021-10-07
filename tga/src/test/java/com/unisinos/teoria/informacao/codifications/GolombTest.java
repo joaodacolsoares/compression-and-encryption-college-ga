@@ -13,7 +13,7 @@ public class GolombTest {
   public void shouldCompressRemainderWith2Positions() throws IOException {
     Codification golomb = new Golomb(4);
     byte[] result = golomb.compress(new int[] {14});
-    assertEquals(24, result[0]);
+    assertEquals(1, result[0]);
   }
 
   //01110000
@@ -21,7 +21,7 @@ public class GolombTest {
   public void shouldCompressRemainderWith3Positions() throws IOException {
     Codification golomb = new Golomb(8);
     byte[] result = golomb.compress(new int[] {14});
-    assertEquals(112, result[0]);
+    assertEquals(1, result[0]);
   }
 
   @Test
